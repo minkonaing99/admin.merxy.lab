@@ -106,7 +106,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (wholesaleBtn) {
-    wholesaleBtn.addEventListener("click", () => showPage("wholesale"));
+    wholesaleBtn.addEventListener("click", () => {
+      showPage("wholesale");
+      window.loadWsSalesIfNeeded?.();
+    });
   }
 
   window.hideRetailForm = () => {
