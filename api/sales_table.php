@@ -91,20 +91,19 @@ try {
     $where = [];
     $params = [];
     if ($q !== '') {
-        $where[] = '(sale_product LIKE ? OR customer LIKE ? OR email LIKE ? OR manager LIKE ? OR purchased_date LIKE ? OR expired_date LIKE ?)';
+        $where[] = '(sale_product LIKE :q1 OR customer LIKE :q2 OR email LIKE :q3 OR manager LIKE :q4 OR purchased_date LIKE :q5 OR expired_date LIKE :q6)';
         $qLike = '%' . $q . '%';
-        $params[] = $qLike;
-        $params[] = $qLike;
-        $params[] = $qLike;
-        $params[] = $qLike;
-        $params[] = $qLike;
-        $params[] = $qLike;
+        $params[':q1'] = $qLike;
+        $params[':q2'] = $qLike;
+        $params[':q3'] = $qLike;
+        $params[':q4'] = $qLike;
+        $params[':q5'] = $qLike;
+        $params[':q6'] = $qLike;
     }
     if ($cursorDate !== null && $cursorId !== null) {
-        $where[] = '(purchased_date < ? OR (purchased_date = ? AND sale_id < ?))';
-        $params[] = $cursorDate;
-        $params[] = $cursorDate;
-        $params[] = $cursorId;
+        $where[] = '(purchased_date < :cursor_date OR (purchased_date = :cursor_date AND sale_id < :cursor_id))';
+        $params[':cursor_date'] = $cursorDate;
+        $params[':cursor_id'] = $cursorId;
     }
     if ($where) {
         $sql .= ' WHERE ' . implode(' AND ', $where);
@@ -113,13 +112,23 @@ try {
     $sql .= ' ORDER BY purchased_date DESC, sale_id DESC';
 
     if ($cursor === '' && $offset > 0) {
-        $sql .= ' LIMIT ' . (int)$limit . ' OFFSET ' . (int)$offset;
+        $sql .= ' LIMIT :limit OFFSET :offset';
+        $stmt = $pdo->prepare($sql);
+        foreach ($params as $k => $v) {
+            $stmt->bindValue($k, $v);
+        }
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
     } else {
-        $sql .= ' LIMIT ' . (int)($limit + 1);
+        $sql .= ' LIMIT :limit_plus_one';
+        $stmt = $pdo->prepare($sql);
+        foreach ($params as $k => $v) {
+            $stmt->bindValue($k, $v);
+        }
+        $stmt->bindValue(':limit_plus_one', $limit + 1, PDO::PARAM_INT);
+        $stmt->execute();
     }
-
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute($params);
 
     $rows = $stmt->fetchAll();
     $hasMore = false;

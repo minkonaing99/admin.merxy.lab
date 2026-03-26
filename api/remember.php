@@ -11,7 +11,11 @@ const REMEMBER_DAYS = 7;
 
 function remember_secret(): string
 {
-    return Config::get('MERXYLAB_REMEMBER_SECRET', 'change-me-please-32bytes-min') ?: 'change-me-please-32bytes-min';
+    $secret = Config::get('MERXYLAB_REMEMBER_SECRET', '') ?: '';
+    if ($secret === '') {
+        throw new RuntimeException('MERXYLAB_REMEMBER_SECRET is not set in .env. Cannot issue or verify remember-me cookies.');
+    }
+    return $secret;
 }
 
 function b64u(string $bin): string
