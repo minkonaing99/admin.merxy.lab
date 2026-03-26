@@ -82,7 +82,7 @@ document
   const API_LIST_URL = "api/ws_sales_table.php";
   const API_DELETE_URL = "api/ws_sale_delete.php";
   const API_INLINE_URL = "api/ws_sale_update_inline.php";
-  const API_FETCH_LIMIT = 500;
+  const API_FETCH_LIMIT = 200;
 
   // Desktop (table)
   const tbody = document.getElementById("ws_sales_table");
@@ -902,10 +902,6 @@ document
 
   /** Loads rows from cache/network and renders active viewport. */
   async function loadSales() {
-    // Start loading with minimum 1 second display
-    const loadingStartTime = Date.now();
-    const minLoadingTime = 1000; // 1 second minimum
-
     // Show global loading overlay
     if (window.LoadingSystem) {
       window.LoadingSystem.showGlobalLoading("Loading sales data...");
@@ -941,21 +937,8 @@ document
           })
           .catch(() => {});
 
-        // Ensure minimum loading time for cached data
-        const elapsed = Date.now() - loadingStartTime;
-        if (elapsed < minLoadingTime) {
-          setTimeout(() => {
-            if (window.LoadingSystem) {
-              window.LoadingSystem.hideGlobalLoading();
-            }
-            hideLoader();
-          }, minLoadingTime - elapsed);
-        } else {
-          if (window.LoadingSystem) {
-            window.LoadingSystem.hideGlobalLoading();
-          }
-          hideLoader();
-        }
+        if (window.LoadingSystem) window.LoadingSystem.hideGlobalLoading();
+        hideLoader();
         return;
       } catch {
         sessionStorage.removeItem(CACHE_KEY);
@@ -970,21 +953,8 @@ document
       allRows.forEach(buildSearchKey);
       renderViewport(filterRowsByQuery(allRows, currentQuery));
 
-      // Ensure minimum loading time for fresh data
-      const elapsed = Date.now() - loadingStartTime;
-      if (elapsed < minLoadingTime) {
-        setTimeout(() => {
-          if (window.LoadingSystem) {
-            window.LoadingSystem.hideGlobalLoading();
-          }
-          hideLoader();
-        }, minLoadingTime - elapsed);
-      } else {
-        if (window.LoadingSystem) {
-          window.LoadingSystem.hideGlobalLoading();
-        }
-        hideLoader();
-      }
+      if (window.LoadingSystem) window.LoadingSystem.hideGlobalLoading();
+      hideLoader();
     } catch (err) {
       console.error("Failed to load sales:", err);
       if (!MQ_MOBILE.matches && tbody) {
@@ -1089,14 +1059,18 @@ document
     renderViewport(filterRowsByQuery(allRows, currentQuery));
   });
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", loadSales);
-  } else {
+  let wsLoaded = false;
+
+  /** Called by add_sales_toggle.js the first time the wholesale tab is activated. */
+  function loadWsSalesIfNeeded() {
+    if (wsLoaded) return;
+    wsLoaded = true;
     loadSales();
   }
 
   setupCustomerSearch(); // debounced search
   initInlineEditing(); // applies to table only
+  window.loadWsSalesIfNeeded = loadWsSalesIfNeeded;
   window.refreshWsSalesTable = refreshCacheAndReload;
 })();
 
