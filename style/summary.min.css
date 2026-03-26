@@ -1,0 +1,756 @@
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(180px, 1fr));
+    gap: 14px;
+    padding: 12px 16px 18px
+}
+
+.kpi-card {
+    background: #0f1115;
+    border: 1px solid #1b1f2a;
+    border-radius: 14px;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, .4), 0 10px 20px rgba(0, 0, 0, .35), inset 0 1px 0 rgba(255, 255, 255, .06);
+    transition: transform .2s ease, box-shadow .2s ease
+}
+
+.kpi-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, .45), 0 14px 28px rgba(0, 0, 0, .4), inset 0 1px 0 rgba(255, 255, 255, .08)
+}
+
+.kpi-label {
+    color: #99a1b3;
+    font-size: .95rem;
+    font-weight: 600;
+    letter-spacing: .01em
+}
+
+.kpi-value {
+    color: #e6e9ef;
+    font-weight: 800;
+    font-size: 1.6rem;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    padding-right: .5rem
+}
+
+.kpi-compare {
+    font-size: .78rem;
+    color: #99a1b3;
+    text-align: right
+}
+
+.kpi-compare.up {
+    color: #22c55e
+}
+
+.kpi-compare.down {
+    color: #ef4444
+}
+
+.summary-filter-bar {
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+    margin-left: auto;
+    flex-wrap: wrap
+}
+
+.summary-filter-bar label {
+    font-size: .75rem;
+    font-weight: 600;
+    color: #99a1b3
+}
+
+.summary-filter-bar select,
+.summary-filter-bar input[type="date"] {
+    background: #1b1f2a;
+    color: #e6e9ef;
+    border: 1px solid #2a2f3d;
+    border-radius: 7px;
+    padding: .28rem .4rem;
+    font-size: .75rem;
+    color-scheme: dark
+}
+
+.summary-filter-bar input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(2) contrast(1.2);
+    opacity: 1;
+    cursor: pointer
+}
+
+.summary-filter-bar button {
+    background: linear-gradient(135deg, #7cc4e1, #63b7d6);
+    color: #0f172a;
+    border: 1px solid rgba(124, 196, 225, .75);
+    border-radius: 1.5rem;
+    padding: .5rem 1rem;
+    font-size: .95rem;
+    font-weight: 400;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(124, 196, 225, .24);
+    transition: transform .2s ease, box-shadow .2s ease, opacity .2s ease, background .2s ease, border-color .2s ease
+}
+
+.summary-filter-bar button:hover {
+    background: linear-gradient(135deg, #9ad8ea, #7cc4e1);
+    border-color: rgba(154, 216, 234, .8);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 22px rgba(124, 196, 225, .3)
+}
+
+.summary-compare-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    padding-left: .35rem
+}
+
+.risk-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(160px, 1fr));
+    gap: 12px;
+    padding: 12px 16px 16px
+}
+
+.forecast-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+    gap: 12px;
+    padding: 12px 16px 16px
+}
+
+.risk-card,
+.forecast-card {
+    background: #0f1115;
+    border: 1px solid #1b1f2a;
+    border-radius: 12px;
+    padding: 14px 16px
+}
+
+.risk-card.overdue {
+    border-left: 3px solid #ef4444
+}
+
+.risk-card.today {
+    border-left: 3px solid #f97316
+}
+
+.risk-card.soon {
+    border-left: 3px solid #eab308
+}
+
+.risk-card.watch {
+    border-left: 3px solid #22c55e
+}
+
+.risk-label {
+    color: #99a1b3;
+    font-size: .85rem;
+    margin-bottom: .35rem
+}
+
+.risk-value {
+    color: #e6e9ef;
+    font-size: 1.35rem;
+    font-weight: 700
+}
+
+.risk-meta {
+    color: #99a1b3;
+    font-size: .8rem;
+    margin-top: .35rem
+}
+
+.summary-modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, .7);
+    z-index: 9998;
+    padding: 1rem
+}
+
+.summary-modal.open {
+    display: flex
+}
+
+.summary-modal-panel {
+    width: min(1000px, 96vw);
+    max-height: 86vh;
+    overflow: auto;
+    background: #0f1115;
+    border: 1px solid #1b1f2a;
+    border-radius: 12px
+}
+
+.summary-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .9rem 1rem;
+    border-bottom: 1px solid #1b1f2a
+}
+
+.summary-modal-header h3 {
+    margin: 0;
+    color: #e6e9ef
+}
+
+.summary-modal-header button {
+    border: 1px solid rgba(124, 196, 225, .75);
+    background: linear-gradient(135deg, #7cc4e1, #63b7d6);
+    color: #0f172a;
+    border-radius: 8px;
+    padding: .3rem .55rem;
+    cursor: pointer
+}
+
+@media (max-width:1100px) {
+    .kpi-grid {
+        grid-template-columns: repeat(2, minmax(160px, 1fr))
+    }
+}
+
+@media (min-width:768px) and (max-width:1194px) {
+    .kpi-grid {
+        gap: 12px;
+        padding: 10px 12px 14px
+    }
+
+    .kpi-card {
+        padding: 14px 14px
+    }
+
+    .kpi-label {
+        font-size: .88rem
+    }
+
+    .kpi-value {
+        font-size: 1.35rem
+    }
+
+    .chart-card {
+        height: 320px
+    }
+
+    .expire-filter-bar {
+        gap: .4rem
+    }
+
+    .expire-filter-bar input[type="date"] {
+        font-size: .74rem;
+        padding: .25rem .35rem
+    }
+}
+
+@media (max-width:520px) {
+    .kpi-grid {
+        grid-template-columns: 1fr
+    }
+
+    .risk-grid,
+    .forecast-grid {
+        grid-template-columns: 1fr
+    }
+}
+
+.charts-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 6px
+}
+
+.chart-card {
+    position: relative;
+    height: 360px;
+    background: linear-gradient(180deg, rgba(15, 23, 42, .72) 0%, rgba(8, 15, 30, .86) 100%);
+    border: 1px solid rgba(71, 85, 105, .28);
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(2, 6, 23, .35), inset 0 1px 0 rgba(255, 255, 255, .03);
+    padding: 12px;
+    color: #fff;
+    overflow: hidden
+}
+
+.chart-card canvas {
+    position: absolute;
+    inset: 12px;
+    width: calc(100% - 24px) !important;
+    height: calc(100% - 24px) !important;
+    background: 0 0 !important
+}
+
+@media (max-width:1100px) {
+    .charts-row {
+        grid-template-columns: 1fr 1fr
+    }
+
+    .chart-card {
+        height: 340px
+    }
+}
+
+@media (max-width:720px) {
+    .charts-row {
+        grid-template-columns: 1fr
+    }
+
+    .chart-card {
+        height: 330px
+    }
+}
+
+.era-table-wrap {
+    display: block
+}
+
+.subs-list {
+    display: none;
+    border-radius: 14px;
+    background: var(--card);
+    padding-bottom: 1rem;
+    border: 1px solid #1b1f2a
+}
+
+.menu-bar {
+    border-top-left-radius: 14px;
+    border-top-right-radius: 14px
+}
+
+/* Keep desktop table spacing aligned with Sales Overview for visual consistency. */
+.destop-table .era-table td,
+.destop-table .era-table th {
+    padding: .55rem .6rem;
+    line-height: 1.35
+}
+
+.expire-filter-bar {
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+    margin-left: auto;
+    color: #99a1b3;
+    flex-wrap: wrap
+}
+
+.expire-filter-bar label {
+    font-size: .75rem;
+    font-weight: 600
+}
+
+.expire-filter-bar input[type="date"] {
+    background: #1b1f2a;
+    color: #e6e9ef;
+    border: 1px solid #2a2f3d;
+    border-radius: 7px;
+    padding: .28rem .4rem;
+    font-size: .75rem;
+    color-scheme: dark;
+    -webkit-appearance: none;
+    appearance: none
+}
+
+.expire-filter-bar input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(2) contrast(1.2);
+    opacity: 1;
+    cursor: pointer
+}
+
+.expire-filter-bar input[type="date"]::-webkit-datetime-edit,
+.expire-filter-bar input[type="date"]::-webkit-datetime-edit-fields-wrapper,
+.expire-filter-bar input[type="date"]::-webkit-datetime-edit-text,
+.expire-filter-bar input[type="date"]::-webkit-datetime-edit-month-field,
+.expire-filter-bar input[type="date"]::-webkit-datetime-edit-day-field,
+.expire-filter-bar input[type="date"]::-webkit-datetime-edit-year-field {
+    color: #e6e9ef
+}
+
+.expire-filter-bar button {
+    background: linear-gradient(135deg, #7cc4e1, #63b7d6);
+    color: #0f172a;
+    border: 1px solid rgba(124, 196, 225, .75);
+    border-radius: 8px;
+    padding: .35rem .7rem;
+    font-size: .8rem;
+    cursor: pointer
+}
+
+.expire-filter-bar button:hover {
+    background: linear-gradient(135deg, #9ad8ea, #7cc4e1);
+    border-color: rgba(154, 216, 234, .8)
+}
+
+.expire-filter-info {
+    margin-left: .5rem;
+    font-size: .8rem;
+    color: #c7cedd
+}
+
+@media (max-width:640px) {
+    .destop-table {
+        display: none
+    }
+
+    .subs-list {
+        display: block
+    }
+
+    .menu-bar {
+        border-top-left-radius: 14px;
+        border-top-right-radius: 14px
+    }
+
+    .expire-filter-bar {
+        margin-left: 0;
+        width: 100%;
+        justify-content: flex-start
+    }
+
+    .subs-card {
+        background: var(--card);
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        padding: .5rem 1.3rem;
+        color: #e6e9ef;
+        margin: 0 0
+    }
+
+    .subs-card:hover {
+        background: rgba(75, 100, 141, 0.26)
+    }
+
+    .subs-row {
+        margin: .28rem 0
+    }
+
+    .subs-row-top {
+        display: grid;
+        grid-template-columns: 1fr 90px;
+        align-items: center;
+        gap: .5rem
+    }
+
+    .subs-product {
+        font-size: .8rem;
+        text-align: left;
+        font-weight: 700;
+        line-height: 1.2
+    }
+
+    .subs-renew {
+        text-align: center;
+        font-size: .8rem
+    }
+
+    .subs-renew span {
+        margin: 0 1px
+    }
+
+    .subs-duration .era-badge {
+        display: inline-flex;
+        min-width: 28px;
+        height: 20px;
+        font-size: .72rem
+    }
+
+    .subs-name {
+        text-align: left;
+        font-size: .8rem
+    }
+
+    .subs-email {
+        text-align: left;
+        overflow-wrap: anywhere;
+        font-size: .8rem
+    }
+
+    .subs-dates {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        font-size: .8rem
+    }
+
+    .subs-purchased {
+        text-align: left
+    }
+
+    .subs-expire {
+        text-align: right
+    }
+
+    .subs-label {
+        display: inline-block;
+        font-size: .7rem;
+        color: #99a1b3;
+        margin-right: .25rem
+    }
+
+    .subs-price {
+        text-align: right;
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+        font-size: .9rem
+    }
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: .75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .5px
+}
+
+.status-badge.active {
+    background-color: rgba(34, 197, 94, .15);
+    color: #22c55e;
+    border: 1px solid rgba(34, 197, 94, .3)
+}
+
+.status-badge.inactive {
+    background-color: rgba(239, 68, 68, .15);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, .3)
+}
+
+.user-card {
+    background: #0f1115;
+    border: 1px solid #1b1f2a;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .1)
+}
+
+.user-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #1b1f2a
+}
+
+.user-number {
+    font-weight: 700;
+    color: #e6e9ef;
+    font-size: .9rem
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: .85rem;
+    line-height: 1.4
+}
+
+.info-row strong {
+    color: #99a1b3;
+    font-weight: 600;
+    min-width: 80px
+}
+
+.info-row:not(strong) {
+    color: #e6e9ef;
+    text-align: right;
+    flex: 1
+}
+
+.user-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px
+}
+
+.era-table td:last-child,
+.era-table th:last-child {
+    text-align: right !important
+}
+
+.era-icon-btn {
+    margin-left: auto
+}
+
+.password-requirement {
+    font-size: .9rem;
+    color: var(--white);
+    margin-top: 8px;
+    padding: 0 3rem;
+    text-align: left
+}
+
+.password-requirement div {
+    margin-bottom: .25rem;
+    transition: color .2s ease
+}
+
+.password-requirement div:last-child {
+    margin-bottom: 0
+}
+
+.password-requirement .valid {
+    color: #22c55e
+}
+
+.password-requirement .invalid {
+    color: #ef4444
+}
+
+@media (max-width:300px) {
+    .era-table-wrap {
+        display: none
+    }
+
+    .subs-list {
+        display: block
+    }
+
+    .subs-row-top .subs-label {
+        display: inline
+    }
+
+    .subs-row-top {
+        grid-template-columns: 1fr;
+        justify-items: start
+    }
+
+    .subs-label {
+        display: none
+    }
+}
+
+/* Summary tables (Expire Soon / Need Renewable) aligned to Sales Overview theme */
+.destop-table .era-table thead th {
+    color: #9fb0c8;
+}
+
+.destop-table .era-row:hover {
+    background: inherit;
+}
+
+.destop-table td.store-merxylab {
+    background-color: rgba(89, 135, 168, 0.28) !important;
+}
+
+.destop-table td.store-merxylab:hover {
+    background-color: rgba(89, 135, 168, 0.36) !important;
+}
+
+.destop-table td.store-dmarwal {
+    background-color: rgba(75, 100, 141, 0.24) !important;
+}
+
+.destop-table td.store-dmarwal:hover {
+    background-color: rgba(75, 100, 141, 0.32) !important;
+}
+
+.destop-table td.store-ember {
+    background-color: rgba(185, 228, 244, 0.24) !important;
+}
+
+.destop-table td.store-ember:hover {
+    background-color: rgba(185, 228, 244, 0.32) !important;
+}
+
+.destop-table td.store-violet {
+    background-color: rgba(103, 145, 184, 0.24) !important;
+}
+
+.destop-table td.store-violet:hover {
+    background-color: rgba(103, 145, 184, 0.32) !important;
+}
+
+.destop-table td.store-void,
+.destop-table td.store-cyan {
+    background-color: rgba(231, 251, 249, 0.18) !important;
+}
+
+.destop-table td.store-void:hover,
+.destop-table td.store-cyan:hover {
+    background-color: rgba(185, 228, 244, 0.24) !important;
+}
+
+.destop-table td.store-default {
+    background-color: transparent !important;
+}
+
+#expired-item .subs-card.store-merxylab,
+#renewal-item .subs-card.store-merxylab {
+    background-color: rgba(89, 135, 168, 0.16);
+    border-left: 3px solid #7cc4e1;
+}
+
+#expired-item .subs-card.store-merxylab:hover,
+#renewal-item .subs-card.store-merxylab:hover {
+    background-color: rgba(89, 135, 168, 0.24);
+}
+
+#expired-item .subs-card.store-dmarwal,
+#renewal-item .subs-card.store-dmarwal {
+    background-color: rgba(75, 100, 141, 0.14);
+    border-left: 3px solid #4b648d;
+}
+
+#expired-item .subs-card.store-dmarwal:hover,
+#renewal-item .subs-card.store-dmarwal:hover {
+    background-color: rgba(75, 100, 141, 0.22);
+}
+
+#expired-item .subs-card.store-ember,
+#renewal-item .subs-card.store-ember {
+    background-color: rgba(185, 228, 244, 0.16);
+    border-left: 3px solid #b9e4f4;
+}
+
+#expired-item .subs-card.store-ember:hover,
+#renewal-item .subs-card.store-ember:hover {
+    background-color: rgba(185, 228, 244, 0.26);
+}
+
+#expired-item .subs-card.store-violet,
+#renewal-item .subs-card.store-violet {
+    background-color: rgba(103, 145, 184, 0.14);
+    border-left: 3px solid #7aa3c7;
+}
+
+#expired-item .subs-card.store-violet:hover,
+#renewal-item .subs-card.store-violet:hover {
+    background-color: rgba(103, 145, 184, 0.22);
+}
+
+#expired-item .subs-card.store-void,
+#renewal-item .subs-card.store-void,
+#expired-item .subs-card.store-cyan,
+#renewal-item .subs-card.store-cyan {
+    background-color: rgba(231, 251, 249, 0.14);
+    border-left: 3px solid #e7fbf9;
+}
+
+#expired-item .subs-card.store-void:hover,
+#renewal-item .subs-card.store-void:hover,
+#expired-item .subs-card.store-cyan:hover,
+#renewal-item .subs-card.store-cyan:hover {
+    background-color: rgba(185, 228, 244, 0.18);
+}
+
+
