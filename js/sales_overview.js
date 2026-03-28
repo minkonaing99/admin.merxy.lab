@@ -452,21 +452,30 @@ document
     const field = td.dataset.field; // customer|email|manager|note
     const initial = (span.textContent || "").trim();
 
+    // Lock the cell to its current rendered size so the input doesn't cause reflow.
+    td.style.width = td.offsetWidth + "px";
+    td.style.height = td.offsetHeight + "px";
+
     td.classList.add("editing");
     span.style.display = "none";
 
     const input = document.createElement("input");
     input.type = field === "email" ? "email" : "text";
-    input.className = "form-control form-control-sm inline-input";
+    input.className = "inline-input";
     input.value = initial === "-" ? "" : initial;
-    input.style.width = "100%";
-    input.style.boxSizing = "border-box";
+    input.style.cssText = "width:100%;height:100%;box-sizing:border-box;padding:0;margin:0;border:none;outline:none;background:transparent;font:inherit;color:inherit;";
 
     td.appendChild(input);
     activeEditor = { td, input, span, prev: initial };
 
     input.focus();
     input.select();
+  }
+
+  /** Removes the locked dimensions set when editing started. */
+  function unlockCellSize(td) {
+    td.style.width = "";
+    td.style.height = "";
   }
 
   /** Cancels inline editing and restores previous text. */
@@ -485,6 +494,7 @@ document
       td.title = activeEditor?.prev || "";
     }
 
+    unlockCellSize(td);
     td.classList.remove("editing");
     if (activeEditor?.td === td) activeEditor = null;
   }
@@ -504,6 +514,7 @@ document
     if (next === prev) {
       td.removeChild(input);
       span.style.display = "";
+      unlockCellSize(td);
       td.classList.remove("editing");
       if (activeEditor?.td === td) activeEditor = null;
       return;
@@ -526,6 +537,7 @@ document
     span.style.display = "";
     if (field === "note" || field === "customer") td.title = next || "";
     td.removeChild(input);
+    unlockCellSize(td);
     td.classList.remove("editing");
     if (activeEditor?.td === td) activeEditor = null;
 
