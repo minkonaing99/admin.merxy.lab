@@ -117,6 +117,13 @@ Six security issues were fixed in one pass:
 5. **console.log in production** — `js/product_catalog.js` logged the full request payload; `js/loading.js` logged an init message. Both removed.
 6. **Type-juggling in user_delete** — `api/user_delete.php` used loose `==` for self-delete guard. Changed to `(int) === (int)`.
 
+### Inline edit cell resize (fixed)
+`startInlineEdit()` in `js/sales_overview.js` and `js/ws_sales_overview.js` was using `form-control form-control-sm` on the injected `<input>`, whose padding and border caused the table cell to grow. Fixed by:
+1. Snapshotting `td.offsetWidth`/`td.offsetHeight` and pinning them as inline styles before hiding the span.
+2. Replacing `form-control` with a transparent, borderless style (`padding:0; border:none; background:transparent; font:inherit`).
+3. Calling `unlockCellSize(td)` (clears the pinned styles) in all exit paths — cancel, no-change save, and normal save.
+Do not add `form-control` or similar framework input classes to inline edit inputs; they will cause reflow.
+
 ### SHOW COLUMNS per-request overhead (fixed)
 `api/product_insertion.php` and `api/product_update.php` ran `SHOW COLUMNS FROM products_catalog LIKE 'store'` on every request. Result is now cached in `$_SESSION['_schema_has_store_col']` — the query runs once per session. Apply the same pattern (`$_SESSION['_schema_has_store_col']`) if new endpoints need the same check.
 
