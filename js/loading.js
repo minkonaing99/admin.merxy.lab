@@ -424,6 +424,4 @@
   window.addEventListener("error", (event) => handleGlobalError(event.error));
   window.addEventListener("unhandledrejection", handleUnhandledRejection);
 
-  // ====== INITIALIZATION ======
-  console.log("Loading System initialized successfully");
 })();

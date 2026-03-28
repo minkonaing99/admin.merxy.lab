@@ -1,8 +1,6 @@
 <?php
 // api/ws_product_update.php
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST'); // POST only
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);

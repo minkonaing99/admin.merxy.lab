@@ -38,10 +38,36 @@ function auth_mark_login(array $dbUserRow): void
     session_regenerate_id(true);
 }
 
+function csrf_token(): string
+{
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return (string)$_SESSION['csrf_token'];
+}
+
+function csrf_verify(): void
+{
+    $token    = trim((string)($_SERVER['HTTP_X_CSRF_TOKEN'] ?? ''));
+    $expected = (string)($_SESSION['csrf_token'] ?? '');
+    if ($expected === '' || !hash_equals($expected, $token)) {
+        if (Http::acceptsJson()) {
+            Http::json(['success' => false, 'error' => 'Invalid CSRF token'], 403);
+            exit;
+        }
+        http_response_code(403);
+        exit('Forbidden');
+    }
+}
+
 function auth_require_login(array $allowedRoles = []): void
 {
     if (!auth_is_logged_in()) {
         auth_fail();
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        csrf_verify();
     }
 
     $now = time();

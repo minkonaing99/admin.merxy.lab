@@ -125,7 +125,6 @@ try {
             'error' => 'Validation errors occurred',
             'details' => $errors,
             'inserted_count' => $insertedCount,
-            'debug_data' => $sales // Add debug data to see what was received
         ], JSON_UNESCAPED_UNICODE);
         exit;
     }

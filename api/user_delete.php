@@ -31,7 +31,7 @@ try {
     // Check if user exists and is not the current user
     $current_user_id = $_SESSION['user']['id'] ?? null;
 
-    if ($user_id == $current_user_id) {
+    if ((int)$user_id === (int)$current_user_id) {
         http_response_code(400);
         echo json_encode(['success' => false, 'error' => 'Cannot delete your own account'], JSON_UNESCAPED_UNICODE);
         exit;
