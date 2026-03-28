@@ -101,9 +101,10 @@ try {
         $params[':q6'] = $qLike;
     }
     if ($cursorDate !== null && $cursorId !== null) {
-        $where[] = '(purchased_date < :cursor_date OR (purchased_date = :cursor_date AND sale_id < :cursor_id))';
-        $params[':cursor_date'] = $cursorDate;
-        $params[':cursor_id'] = $cursorId;
+        $where[] = '(purchased_date < :cursor_date OR (purchased_date = :cursor_date2 AND sale_id < :cursor_id))';
+        $params[':cursor_date']  = $cursorDate;
+        $params[':cursor_date2'] = $cursorDate;
+        $params[':cursor_id']    = $cursorId;
     }
     if ($where) {
         $sql .= ' WHERE ' . implode(' AND ', $where);
