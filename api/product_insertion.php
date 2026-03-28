@@ -1,8 +1,6 @@
 <?php
 // api/product_insertion.php
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST'); // POST only
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -24,9 +22,12 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
-    $hasStoreCol = (bool)$pdo
-        ->query("SHOW COLUMNS FROM products_catalog LIKE 'store'")
-        ->fetch(PDO::FETCH_ASSOC);
+    if (!isset($_SESSION['_schema_has_store_col'])) {
+        $_SESSION['_schema_has_store_col'] = (bool)$pdo
+            ->query("SHOW COLUMNS FROM products_catalog LIKE 'store'")
+            ->fetch(PDO::FETCH_ASSOC);
+    }
+    $hasStoreCol = $_SESSION['_schema_has_store_col'];
 
     // Read JSON body
     $raw = file_get_contents('php://input');

@@ -1,7 +1,6 @@
 <?php
 // api/fetch_product_options.php
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
 
 require_once __DIR__ . '/dbinfo.php';
 

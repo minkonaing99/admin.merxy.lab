@@ -19,6 +19,7 @@ $user = htmlspecialchars($_SESSION['user']['username'] ?? 'Guest', ENT_QUOTES);
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="<?= htmlspecialchars(csrf_token(), ENT_QUOTES) ?>">
     <title>MerxyLab • Product Catalog</title>
     <link rel="stylesheet" href="./style/style.min.css">
     <link rel="stylesheet" href="./style/product_catalog.min.css">
@@ -252,6 +253,7 @@ $user = htmlspecialchars($_SESSION['user']['username'] ?? 'Guest', ENT_QUOTES);
         <div id="scrollSentinel" style="height: 1px;"></div>
     </main>
 
+    <script src="./js/csrf.js"></script>
     <script src="./js/nav.js"></script>
     <script src="./js/product_catalog_toggle.js"></script>
     <script src="./js/product_catalog.js"></script>

@@ -462,86 +462,108 @@ class UploadModal {
 
   /** Renders preview modal and confirms final bulk insert submission. */
   showPreview(salesData) {
-    // Create preview modal HTML
-    const previewHTML = `
-      <div class="upload-modal" id="previewModal">
-        <div class="upload-modal-content" style="max-width: 90vw; max-height: 80vh;">
-          <div class="upload-modal-header">
-            <h3 class="upload-modal-title">Preview Data (${
-              salesData.length
-            } records)</h3>
-            <button class="upload-modal-close" id="previewModalClose">&times;</button>
-          </div>
-          <div class="upload-modal-body" style="overflow-y: auto; max-height: 60vh;">
-            <div class="preview-table-container">
-              <table class="preview-table" style="width: 100%; border-collapse: collapse; font-size: 12px;">
-                <thead>
-                  <tr style="background-color: #0f1115; font-weight: bold;">
-                    <th style="border: 1px solid #1b1f2a; padding: 8px; text-align: left; color: #99a1b3;">Product</th>
-                    <th style="border: 1px solid #1b1f2a; padding: 8px; text-align: left; color: #99a1b3;">Customer</th>
-                    <th style="border: 1px solid #1b1f2a; padding: 8px; text-align: left; color: #99a1b3;">Email</th>
-                    <th style="border: 1px solid #1b1f2a; padding: 8px; text-align: left; color: #99a1b3;">Purchase Date</th>
-                    <th style="border: 1px solid #1b1f2a; padding: 8px; text-align: left; color: #99a1b3;">Expired Date</th>
-                    <th style="border: 1px solid #1b1f2a; padding: 8px; text-align: left; color: #99a1b3;">Manager</th>
-                    <th style="border: 1px solid #1b1f2a; padding: 8px; text-align: left; color: #99a1b3;">Price</th>
-                    <th style="border: 1px solid #1b1f2a; padding: 8px; text-align: left; color: #99a1b3;">Profit</th>
-                    <th style="border: 1px solid #1b1f2a; padding: 8px; text-align: left; color: #99a1b3;">Note</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${salesData
-                    .map(
-                      (sale, index) => `
-                    <tr style="background-color: ${
-                      index % 2 === 0 ? "#0f1115" : "#1b1f2a"
-                    }; color: #e6e9ef;">
-                      <td style="border: 1px solid #1b1f2a; padding: 6px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${
-                        sale.sale_product
-                      }">${sale.sale_product}</td>
-                      <td style="border: 1px solid #1b1f2a; padding: 6px; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${
-                        sale.customer
-                      }">${sale.customer}</td>
-                      <td style="border: 1px solid #1b1f2a; padding: 6px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${
-                        sale.email || "-"
-                      }">${sale.email || "-"}</td>
-                      <td style="border: 1px solid #1b1f2a; padding: 6px; text-align: center;">${
-                        sale.purchased_date
-                      }</td>
-                      <td style="border: 1px solid #1b1f2a; padding: 6px; text-align: center;">${
-                        sale.expired_date || "-"
-                      }</td>
-                      <td style="border: 1px solid #1b1f2a; padding: 6px; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${
-                        sale.manager || "-"
-                      }">${sale.manager || "-"}</td>
-                      <td style="border: 1px solid #1b1f2a; padding: 6px; text-align: right;">${sale.price.toLocaleString()} Ks</td>
-                      <td style="border: 1px solid #1b1f2a; padding: 6px; text-align: right;">${sale.profit.toLocaleString()} Ks</td>
-                      <td style="border: 1px solid #1b1f2a; padding: 6px; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${
-                        sale.note || "-"
-                      }">${sale.note || "-"}</td>
-                    </tr>
-                  `
-                    )
-                    .join("")}
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="upload-modal-footer">
-            <button class="upload-btn upload-btn-secondary" id="previewModalCancel">Cancel</button>
-            <button class="upload-btn upload-btn-primary" id="previewModalConfirm">Confirm Upload</button>
-          </div>
-        </div>
-      </div>
-    `;
+    // Build preview modal via DOM APIs — no user data interpolated into markup.
+    const previewModal = document.createElement("div");
+    previewModal.className = "upload-modal";
+    previewModal.id = "previewModal";
 
-    // Append preview modal to body
-    document.body.insertAdjacentHTML("beforeend", previewHTML);
+    const content = document.createElement("div");
+    content.className = "upload-modal-content";
+    content.style.cssText = "max-width: 90vw; max-height: 80vh;";
 
-    // Get references
-    const previewModal = document.getElementById("previewModal");
-    const closeBtn = document.getElementById("previewModalClose");
-    const cancelBtn = document.getElementById("previewModalCancel");
-    const confirmBtn = document.getElementById("previewModalConfirm");
+    // Header
+    const header = document.createElement("div");
+    header.className = "upload-modal-header";
+    const title = document.createElement("h3");
+    title.className = "upload-modal-title";
+    title.textContent = `Preview Data (${salesData.length} records)`;
+    const closeBtn = document.createElement("button");
+    closeBtn.className = "upload-modal-close";
+    closeBtn.id = "previewModalClose";
+    closeBtn.textContent = "\u00d7";
+    header.appendChild(title);
+    header.appendChild(closeBtn);
+
+    // Body + table
+    const body = document.createElement("div");
+    body.className = "upload-modal-body";
+    body.style.cssText = "overflow-y: auto; max-height: 60vh;";
+
+    const tableContainer = document.createElement("div");
+    tableContainer.className = "preview-table-container";
+
+    const table = document.createElement("table");
+    table.className = "preview-table";
+    table.style.cssText = "width: 100%; border-collapse: collapse; font-size: 12px;";
+
+    const cellStyle = "border: 1px solid #1b1f2a; padding: 8px; text-align: left; color: #99a1b3;";
+    const thead = document.createElement("thead");
+    const headerRow = document.createElement("tr");
+    headerRow.style.cssText = "background-color: #0f1115; font-weight: bold;";
+    ["Product", "Customer", "Email", "Purchase Date", "Expired Date", "Manager", "Price", "Profit", "Note"].forEach((label) => {
+      const th = document.createElement("th");
+      th.style.cssText = cellStyle;
+      th.textContent = label;
+      headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
+
+    const tbody = document.createElement("tbody");
+    salesData.forEach((sale, index) => {
+      const tr = document.createElement("tr");
+      tr.style.cssText = `background-color: ${index % 2 === 0 ? "#0f1115" : "#1b1f2a"}; color: #e6e9ef;`;
+
+      const truncStyle = "border: 1px solid #1b1f2a; padding: 6px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;";
+      const centerStyle = "border: 1px solid #1b1f2a; padding: 6px; text-align: center;";
+      const rightStyle = "border: 1px solid #1b1f2a; padding: 6px; text-align: right;";
+
+      const cells = [
+        { text: sale.sale_product, style: truncStyle, title: sale.sale_product },
+        { text: sale.customer, style: truncStyle, title: sale.customer },
+        { text: sale.email || "-", style: truncStyle, title: sale.email || "-" },
+        { text: sale.purchased_date, style: centerStyle },
+        { text: sale.expired_date || "-", style: centerStyle },
+        { text: sale.manager || "-", style: truncStyle, title: sale.manager || "-" },
+        { text: `${sale.price.toLocaleString()} Ks`, style: rightStyle },
+        { text: `${sale.profit.toLocaleString()} Ks`, style: rightStyle },
+        { text: sale.note || "-", style: "border: 1px solid #1b1f2a; padding: 6px; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;", title: sale.note || "-" },
+      ];
+
+      cells.forEach(({ text, style, title: cellTitle }) => {
+        const td = document.createElement("td");
+        td.style.cssText = style;
+        td.textContent = text;
+        if (cellTitle !== undefined) td.title = cellTitle;
+        tr.appendChild(td);
+      });
+
+      tbody.appendChild(tr);
+    });
+
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    tableContainer.appendChild(table);
+    body.appendChild(tableContainer);
+
+    // Footer
+    const footer = document.createElement("div");
+    footer.className = "upload-modal-footer";
+    const cancelBtn = document.createElement("button");
+    cancelBtn.className = "upload-btn upload-btn-secondary";
+    cancelBtn.id = "previewModalCancel";
+    cancelBtn.textContent = "Cancel";
+    const confirmBtn = document.createElement("button");
+    confirmBtn.className = "upload-btn upload-btn-primary";
+    confirmBtn.id = "previewModalConfirm";
+    confirmBtn.textContent = "Confirm Upload";
+    footer.appendChild(cancelBtn);
+    footer.appendChild(confirmBtn);
+
+    content.appendChild(header);
+    content.appendChild(body);
+    content.appendChild(footer);
+    previewModal.appendChild(content);
+    document.body.appendChild(previewModal);
 
     // Show preview modal
     previewModal.classList.add("active");

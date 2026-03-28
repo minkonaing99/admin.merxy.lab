@@ -443,7 +443,6 @@
         }
         addEls.saveBtn.disabled = true;
         addEls.saveBtn.classList.add("disableBtn");
-        console.log("FINAL PAYLOAD", payload);
 
         const resp = await fetch(api.insert, {
           method: "POST",

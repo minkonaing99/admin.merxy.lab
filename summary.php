@@ -19,6 +19,7 @@ $user = htmlspecialchars($_SESSION['user']['username'] ?? 'Guest', ENT_QUOTES);
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="<?= htmlspecialchars(csrf_token(), ENT_QUOTES) ?>">
     <title>MerxyLab • Summary</title>
     <link rel="stylesheet" href="./style/style.min.css?v=<?php echo filemtime(__DIR__ . '/style/style.min.css'); ?>">
     <link rel="stylesheet" href="./style/summary.min.css?v=<?php echo filemtime(__DIR__ . '/style/summary.min.css'); ?>">
@@ -249,6 +250,7 @@ $user = htmlspecialchars($_SESSION['user']['username'] ?? 'Guest', ENT_QUOTES);
         </div>
     </div>
 
+    <script src="./js/csrf.js"></script>
     <script src="./js/nav.js?v=<?php echo filemtime(__DIR__ . '/js/nav.js'); ?>"></script>
     <script src="./js/summary_table.js?v=<?php echo filemtime(__DIR__ . '/js/summary_table.js'); ?>"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>

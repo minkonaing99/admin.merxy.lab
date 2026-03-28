@@ -19,6 +19,7 @@ $user = htmlspecialchars($_SESSION['user']['username'] ?? 'Guest', ENT_QUOTES);
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="<?= htmlspecialchars(csrf_token(), ENT_QUOTES) ?>">
     <title>MerxyLab • User</title>
     <link rel="stylesheet" href="./style/style.min.css">
     <link rel="stylesheet" href="./style/summary.min.css">
@@ -152,6 +153,7 @@ $user = htmlspecialchars($_SESSION['user']['username'] ?? 'Guest', ENT_QUOTES);
 
     </main>
 
+    <script src="./js/csrf.js"></script>
     <script src="./js/nav.js"></script>
     <script src="./js/user_list.js"></script>
 
